@@ -2,6 +2,10 @@
 
 import os, sys
 
+__author__ = 'Igor Davydenko <playpauseandstop@gmail.com>'
+__license__ = 'GNU General Public License v.3 or above'
+__version__ = '0.1-beta'
+
 if __name__ == '__main__':
     try:
         dirname = os.environ['PWD']
@@ -31,7 +35,7 @@ if __name__ == '__main__':
     os.environ['DJANGO_SETTINGS_MODULE'] = settings
 
     try:
-        from django.core.management import ProjectManagementUtility
+        from django.core.management import ManagementUtility
     except ImportError, e:
         sys.stderr.write(
             "Error: Can't load 'django' library on current environment. " +
@@ -39,5 +43,5 @@ if __name__ == '__main__':
         )
         sys.exit(1)
 
-    utility = ProjectManagementUtility(None, os.path.basename(dirname))
+    utility = ManagementUtility(sys.argv)
     utility.execute()
