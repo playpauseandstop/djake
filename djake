@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# djake = Django + make where make is your manage.py script ran in activated
+# virtual environment.
+#
+# Usage
+# -----
+#
+# ::
+#
+#     $ cd /path/to/cloned-repo
+#     $ djake <TAB><TAB>
+#     $ djake syncdb --noinput
+#     $ djake test --failfast app
+#
+
+directory=`pwd`
+
+env=
+envs=`find $directory -mindepth 2 -maxdepth 3 -name activate | grep "bin/activate$"`
+envs_count=`echo $envs | wc -l`
+
+manage=
+manages=`find $directory -maxdepth 2 -name "manage.py"`
+manages_count=`echo $manages | wc -l`
+
+if [ $envs_count -gt 1 ]
+then
+    echo "Choose your virtual environment..."
+    exit 1
+else
+    export env=$envs
+fi
+
+echo "Activate virtual environment at '`basename $(dirname $(dirname $env))`'..."
+source $env
+
+if [ $manages_count -gt 1 ]
+then
+    echo "Choose your django manage script..."
+    exit 2
+else
+    export manage=$manages
+fi
+
+python "$manage" $*
+deactivate
