@@ -8,22 +8,29 @@ virtual environment.
 Requirements
 ============
 
-* `Python <http://www.python.org/>`_ 2.4 or higher
+* Unix-based OS
 * `Django <http://www.djangoproject.com/>`_ 1.0 or higher
 
 Installation
 ============
 
-*On most UNIX-like systems, you'll probably need to run these commands as root
-or using sudo.*
-
 To install use::
 
-    $ pip install djake
+    $ sudo make install
 
-Or::
+By default, ``djake`` installed to ``/usr/local``, but you should overwrite
+this approach, by setting ``PREFIX`` environment var. For example, if you want
+to install ``djake`` to home directory, execute::
 
-    $ easy_install djake
+    $ make PREFIX=~ install
+
+To uninstall use::
+
+    $ sudo make uninstall
+
+Or if you use customized ``PREFIX``::
+
+    $ make PREFIX=~ uninstall
 
 License
 =======
@@ -36,13 +43,7 @@ Usage
 
 ::
 
-    $ cd /path/to/cloned-repo
-    $ djake <TAB>
+    $ cd /path/to/django-project
+    $ djake --help
     $ djake syncdb --noinput
     $ djake test --failfast app
-
-Or::
-
-    $ djake -C /path/to/cloned-repo <TAB>
-    $ djake -C /path/to/cloned-repo syncdb --noinput
-    $ djake -C /path/to/cloned-repo test --failfast app
