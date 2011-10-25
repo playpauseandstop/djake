@@ -17,7 +17,7 @@
 directory=`pwd`
 
 env=
-envs=`find $directory -mindepth 2 -maxdepth 3 -name activate | grep "bin/activate$"`
+envs=`find $directory -mindepth 2 -maxdepth 4 -name activate | grep "bin/activate$"`
 envs_count=`echo $envs | wc -l`
 
 manage=
