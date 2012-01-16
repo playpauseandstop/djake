@@ -9,27 +9,64 @@
 # ::
 #
 #     $ cd /path/to/cloned-repo
-#     $ djake <TAB><TAB>
 #     $ djake syncdb --noinput
 #     $ djake test --failfast app
+#
+# If your project has more than one virtual environment and you don't want to
+# select it each time when running ``djake`` - you could setup ``VIRTUALENV``
+# environ var first, like::
+#
+#     $ VIRTUALENV=/path/to/virtual/env djake --help
 #
 
 directory=`pwd`
 
-env=
+env=$VIRTUALENV
 envs=`find $directory -mindepth 2 -maxdepth 4 -name activate | grep "bin/activate$"`
-envs_count=`echo $envs | wc -l`
+envs_count=`echo "$envs" | wc -l`
 
 manage=
 manages=`find $directory -maxdepth 2 -name "manage.py"`
-manages_count=`echo $manages | wc -l`
+manages_count=`echo "$manages" | wc -l`
 
-if [ $envs_count -gt 1 ]
+if [ -z "$env" ]
 then
-    echo "Choose your virtual environment..."
-    exit 1
+    if [ $envs_count -gt 1 ]
+    then
+        echo "Choose virtual environment to use..."
+        echo
+
+        counter=1
+
+        for i in $envs
+        do
+            echo "    $counter. $i"
+            let counter=counter+1
+        done
+
+        echo
+        echo -n "Your answer [1]: "
+
+        read env_counter
+
+        if [ -z "$env_counter" ]
+        then
+            export env_counter=1
+        fi
+
+        if [ $env_counter -lt 1 -o $env_counter -gt $envs_count ]
+        then
+            echo "No match to $env_counter virtual env, exit..."
+            exit 1
+        fi
+
+        export env=`echo "$envs" | sed -n $((env_counter))p`
+    else
+        export env=$envs
+    fi
 else
-    export env=$envs
+    export env=`echo "$env" | sed 's#/*$##'`
+    export env=$env"/bin/activate"
 fi
 
 echo "Activate virtual environment at '`basename $(dirname $(dirname $env))`'..."
@@ -43,5 +80,5 @@ else
     export manage=$manages
 fi
 
-python "$manage" $*
+PYTHONPATH=$directory python "$manage" $*
 deactivate
