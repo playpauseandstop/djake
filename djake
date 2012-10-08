@@ -26,7 +26,7 @@ envs=`find $directory -mindepth 2 -maxdepth 4 -name activate | grep "bin/activat
 envs_count=`echo "$envs" | wc -l`
 
 manage=
-manages=`find $directory -maxdepth 2 -name "manage.py"`
+manages=`find $directory -maxdepth 3 -name "manage.py"`
 manages_count=`echo "$manages" | wc -l`
 
 if [ -z "$env" ]
